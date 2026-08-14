@@ -420,7 +420,7 @@ export const works: Work[] = [
     media: [
       {
         type: "full",
-        src: "/images/soulmate-tennis-club/wimbledon.png",
+        src: "/images/soulmate-tennis-club/wimbledon_c.png",
       },
       {
         type: "full",
@@ -455,7 +455,7 @@ export const works: Work[] = [
     media: [
       {
         type: "full",
-        src: "/images/soulmate-tennis-club/rado.png",
+        src: "/images/soulmate-tennis-club/rado_c.png",
       },
       {
         type: "full",
@@ -490,7 +490,7 @@ export const works: Work[] = [
     media: [
       {
         type: "full",
-        src: "/images/soulmate-tennis-club/sera.png",
+        src: "/images/soulmate-tennis-club/sera_c.png",
       },
       {
         type: "full",
@@ -525,7 +525,7 @@ export const works: Work[] = [
     media: [
       {
         type: "full",
-        src: "/images/soulmate-tennis-club/nadal.png",
+        src: "/images/soulmate-tennis-club/nadal_c.png",
       },
       {
         type: "full",
