@@ -22,21 +22,36 @@ export type WorkMediaBlock =
       type: "full";
       src: string;
       alt?: LocalizedText;
+      marginTop?: number;
     }
   | {
       type: "split";
       items: WorkMediaItem[];
     }
   | {
+      type: "collage";
+      left: WorkMediaItem;
+      right: [WorkMediaItem, WorkMediaItem];
+    }
+  | {
       type: "center";
       src: string;
       alt?: LocalizedText;
+      width?: "small" | "medium" | "large" | "full";
+      marginTop?: number;
     }
   | {
       type: "video";
       src: string;
       poster?: string;
       width?: "small" | "medium" | "large" | "full";
+      autoPlay?: boolean;
+    }
+  | {
+      type: "sectionText";
+      title?: LocalizedText;
+      description: LocalizedText;
+      marginTop?: number;
     };
 
 export type Work = {
@@ -114,18 +129,26 @@ export const works: Work[] = [
       {
         type: "video",
         src: "/images/work-hard-play-heart/work-hard-play-heart.mp4",
+        autoPlay: false,
       },
     ],
 
     credit: {
-      ko: `Created & Directed by Jimi Lee
-          Image Generation: Nano Banana
-          Video Generation: Kling AI, Seedance
-          Music: "Garden Waltz for Monsters" by The Green Orbs`,
-      en: `Created & Directed by Jimi Lee
-          Image Generation: Nano Banana
-          Video Generation: Kling AI, Seedance
-          Music: "Garden Waltz for Monsters" by The Green Orbs`,
+      ko: `-Created & Directed by Jimi Lee
+    -Image Generation : Nano Banana 2
+    -Video Generation : Kling AI, Seedance 2.0
+
+    -Music: “Garden Waltz for monsters” by The Green orbs,
+    "Teddy Bear Waltz" by Kevin MacLeod
+    Licensed under Creative Commons: By Attribution 4.0`,
+
+      en: `-Created & Directed by Jimi Lee
+    -Image Generation : Nano Banana 2
+    -Video Generation : Kling AI, Seedance 2.0
+
+    -Music: “Garden Waltz for monsters” by The Green orbs,
+    "Teddy Bear Waltz" by Kevin MacLeod
+    Licensed under Creative Commons: By Attribution 4.0`,
     },
   },
 
@@ -148,6 +171,7 @@ export const works: Work[] = [
       en: "I Want Wing Clothes! is a picture book about a flying squirrel and a red squirrel who learn to understand and help each other by using their unique physical strengths. The story explores empathy, care, and awareness of endangered animals. The project was selected as an excellent work and featured in the news.",
     },
 
+    date: "Aug 2024",
     client: "NEWDOT",
 
     thumbnail: "/images/i-want-wing-clothes/thumbnail.png",
@@ -164,7 +188,8 @@ export const works: Work[] = [
       {
         type: "video",
         src: "/images/i-want-wing-clothes/book.mov",
-        width: "large",
+        width: "full",
+        autoPlay: false,
       },
     ],
 
@@ -303,6 +328,7 @@ export const works: Work[] = [
       {
         type: "video",
         src: "/images/christmas-card/card.MP4",
+        autoPlay: false,
       },
     ],
   },
@@ -362,6 +388,7 @@ export const works: Work[] = [
       en: "SOULMATE TENNIS CLUB is a character-driven project inspired by the stories of people who love tennis. The project expands its visual world through character design, illustration, posters, newspapers, merchandise, and exhibition displays.",
     },
 
+    date: "Mar 2023",
     client: "Personal",
 
     thumbnail: "/images/soulmate-tennis/thumbnail.MP4",
@@ -369,28 +396,60 @@ export const works: Work[] = [
 
     media: [
       {
-        type: "full",
+        type: "center",
         src: "/images/soulmate-tennis/logo.png",
+        width: "small",
       },
       {
         type: "full",
         src: "/images/soulmate-tennis/illustration_tennis.jpg",
       },
       {
-        type: "full",
+        type: "center",
         src: "/images/soulmate-tennis/character.png",
+        width: "small",
+        marginTop: 180,
       },
       {
         type: "full",
         src: "/images/soulmate-tennis/tennis_characters.png",
       },
       {
-        type: "full",
+        type: "center",
+        width: "small",
         src: "/images/soulmate-tennis/illustration.png",
+        marginTop: 180,
+      },
+      {
+        type: "sectionText",
+
+        title: {
+          ko: "Grand Slam Episode Illustrations",
+          en: "Grand Slam Episode Illustrations",
+        },
+
+        description: {
+          ko: "4대 그랜드 슬램 테니스 대회의 특징적인 콘셉트와 클럽 크루를 담은 네 개의 에피소드 포스터를 제작했습니다.",
+          en: "I drew four episode posters featuring the distinct concepts of the four major Grand Slam tennis venues—Wimbledon, the US Open, the Australian Open, and Roland-Garros—along with the club crew.",
+        },
       },
       {
         type: "full",
         src: "/images/soulmate-tennis-club/grand-slam-series.png",
+      },
+      {
+        type: "sectionText",
+        marginTop: 220,
+
+        title: {
+          ko: "SOULMATE TENNIS CLUB Newspaper Illustration",
+          en: "SOULMATE TENNIS CLUB Newspaper Illustration",
+        },
+
+        description: {
+          ko: "SOULMATE TENNIS CLUB의 흥미로운 소식을 뉴스레터를 통해 전합니다! 여러분, Soul과 Ladoo가 결혼한다는 소식 들으셨나요?",
+          en: "Delivering exciting news from SOULMATE TENNIS CLUB through our newsletter! Everyone, have you heard the news that Soul and Ladoo are getting married?",
+        },
       },
       {
         type: "full",
@@ -416,8 +475,10 @@ export const works: Work[] = [
         ],
       },
       {
-        type: "full",
+        type: "center",
+        width: "small",
         src: "/images/soulmate-tennis/display.png",
+        marginTop: 180,
       },
       {
         type: "full",
@@ -457,10 +518,11 @@ export const works: Work[] = [
 
     description: {
       ko: "Soulmate Tennis Club의 캐릭터를 활용해 세계 4대 테니스 대회를 각각의 특징과 유머러스한 장면으로 표현한 일러스트레이션 시리즈입니다. Wimbledon 편에서는 Joko의 강력하고 빠른 서브를 역동적인 장면으로 표현했습니다.",
-      en: "An illustration series featuring Soulmate Tennis Club characters inspired by the four Grand Slam tennis tournaments. Each piece captures the character and atmosphere of a different tournament through playful storytelling. In the Wimbledon edition, Joko’s powerful and speedy serve takes center stage.",
+      en: "Joko’s sppedy shots are so hard to return in Wimbledon.",
     },
 
-    client: "Hey JUD",
+    date: "Mar 2023",
+    client: "Personal",
 
     thumbnail: "/images/soulmate-tennis-club/wimbledon_c.png",
 
@@ -492,10 +554,11 @@ export const works: Work[] = [
 
     description: {
       ko: "Soulmate Tennis Club의 캐릭터 Soul과 Radu가 US Open에서 사랑에 빠지는 장면을 유쾌하게 표현한 일러스트레이션입니다. 세계 4대 테니스 대회의 특징과 캐릭터들의 이야기를 결합한 Grand Slam 일러스트레이션 시리즈의 US Open 편입니다.",
-      en: "A playful illustration of Soul and Radu falling in love at the US Open. This piece is part of a Grand Slam illustration series that combines the distinctive atmosphere of each major tennis tournament with stories featuring the Soulmate Tennis Club characters.",
+      en: "Soul and Radu fell in love at the US Open!",
     },
 
-    client: "Hey JUD",
+    date: "Mar 2023",
+    client: "Personal",
 
     thumbnail: "/images/soulmate-tennis-club/rado_c.png",
 
@@ -527,10 +590,11 @@ export const works: Work[] = [
 
     description: {
       ko: "Soulmate Tennis Club의 캐릭터 Soul과 Sera가 Australian Open에서 펼치는 이야기를 유쾌하게 표현한 일러스트레이션입니다.",
-      en: "A playful illustration featuring Soul and Sera at the Australian Open. This piece is part of a Grand Slam illustration series that reimagines the atmosphere and distinctive character of each major tennis tournament through character-driven storytelling.",
+      en: "Soul was completely defeated by Sera at the Aus Open!",
     },
 
-    client: "Hey JUD",
+    date: "Mar 2023",
+    client: "Personal",
 
     thumbnail: "/images/soulmate-tennis-club/sera_c.png",
 
@@ -562,10 +626,11 @@ export const works: Work[] = [
 
     description: {
       ko: "Soulmate Tennis Club의 Grand Slam 일러스트레이션 시리즈 중 Roland Garros를 표현한 작품입니다.",
-      en: "An illustration from the Soulmate Tennis Club Grand Slam series inspired by Roland Garros.",
+      en: "Nadal’s powerful forehand caused chaos at Roland Garros!",
     },
 
-    client: "Hey JUD",
+    date: "Mar 2023",
+    client: "Personal",
 
     thumbnail: "/images/soulmate-tennis-club/nadal_c.png",
 
@@ -597,7 +662,7 @@ export const works: Work[] = [
 
     description: {
       ko: "『우당탕탕 헬스장』은 헬스장에 모인 다양한 사람들과 직원들의 모습을 유쾌하게 담아낸 일러스트레이션 프로젝트입니다.",
-      en: "Bustling Gym is an illustration project featuring a lively cast of people and staff gathered at a gym. From those who came to exercise to characters with unexpected reasons for being there, the series playfully captures the diverse personalities and amusing situations found in a bustling gym.",
+      en: "Bustling Gym is an illustration project featuring a lively cast of people and staff gathered at a gym. From those who came to exercise to characters with unexpected reasons for being there, the series playfully captures the diverse personalities and amusing situations found in a bustling gym?",
     },
 
     date: "Apr 2024",
@@ -621,6 +686,8 @@ export const works: Work[] = [
       {
         type: "video",
         src: "/images/bustling-gym/illustrations.mov",
+        width: "full",
+        autoPlay: false,
       },
     ],
   },
@@ -644,7 +711,7 @@ export const works: Work[] = [
       en: "This poster was created as part of an animal protection campaign that critiques the sale, abuse, and commercialization of animals.",
     },
 
-    date: "Apr 2023",
+    date: "May 2024",
     client: "Personal",
 
     thumbnail: "/images/animals-are-not-for-sale/poster.png",
@@ -676,11 +743,26 @@ export const works: Work[] = [
       en: "A stationery collection inspired by Dustin, a fictional American kid character. The series includes notebooks, postcards, pin badges, stickers, and other paper goods, featuring Dustin's Awesome Pack and Dustin's Records Sticker Pack. The collection was produced and sold through an independent stationery brand.",
     },
 
+    date: "Dec 2023",
     client: "Personal",
 
     thumbnail: "/images/dustins-awesome-pack/awesome-pack.jpg",
 
     media: [
+      {
+        type: "video",
+        src: "/images/dustins-awesome-pack/superman.mp4",
+        width: "small",
+        autoPlay: true,
+      },
+      {
+        type: "sectionText",
+
+        description: {
+          ko: "I developed Dustin, a stationery collection based on the concept of a fictional American kid, and launched it through my independent stationery brand.",
+          en: "I developed Dustin, a stationery collection based on the concept of a fictional American kid, and launched it through my independent stationery brand.",
+        },
+      },
       {
         type: "full",
         src: "/images/dustins-awesome-pack/dustins_open.png",
@@ -694,20 +776,20 @@ export const works: Work[] = [
         src: "/images/dustins-awesome-pack/awesome-pack-info.png",
       },
       {
-        type: "full",
-        src: "/images/dustins-awesome-pack/awesome-pack-products-1.jpg",
-      },
-      {
-        type: "full",
-        src: "/images/dustins-awesome-pack/awesome-pack-products-2.jpg",
-      },
-      {
-        type: "full",
-        src: "/images/dustins-awesome-pack/awesome-pack-products-3.jpg",
-      },
-      {
-        type: "full",
-        src: "/images/dustins-awesome-pack/records-sticker-pack.jpg",
+        type: "collage",
+
+        left: {
+          src: "/images/dustins-awesome-pack/awesome-pack-products-1.jpg",
+        },
+
+        right: [
+          {
+            src: "/images/dustins-awesome-pack/awesome-pack-products-2.jpg",
+          },
+          {
+            src: "/images/dustins-awesome-pack/awesome-pack-products-3.jpg",
+          },
+        ],
       },
       {
         type: "full",
@@ -717,17 +799,32 @@ export const works: Work[] = [
         type: "full",
         src: "/images/dustins-awesome-pack/records-products-1.jpg",
       },
+
       {
-        type: "full",
-        src: "/images/dustins-awesome-pack/records-products-2.jpg",
+        type: "split",
+        items: [
+          {
+            src: "/images/dustins-awesome-pack/records-products-2.jpg",
+            alt: {
+              ko: "더스틴 노트",
+              en: "Dustin's notebook",
+            },
+          },
+          {
+            src: "/images/dustins-awesome-pack/records-products-3.jpg",
+            alt: {
+              ko: "더스틴 스티커",
+              en: "Dustin's sticker",
+            },
+          },
+        ],
       },
+
       {
-        type: "full",
-        src: "/images/dustins-awesome-pack/records-products-3.jpg",
-      },
-      {
-        type: "full",
-        src: "/images/dustins-awesome-pack/restock_list.png",
+        type: "video",
+        src: "/images/dustins-awesome-pack/restock_list.mp4",
+        width: "small",
+        autoPlay: true,
       },
     ],
   },
@@ -751,7 +848,9 @@ export const works: Work[] = [
       en: "A child abuse awareness campaign poster designed to encourage people to recognize the signs of abuse and identify children who may need help.",
     },
 
+    date: "May 2024",
     thumbnail: "/images/find-jiho/poster.png",
+    client: "Personal",
 
     media: [
       {
@@ -797,6 +896,7 @@ export const works: Work[] = [
           ko: "Let's Clay Sticker 메인 일러스트",
           en: "Let's Clay Sticker main illustration",
         },
+        width: "small",
       },
       {
         type: "full",
@@ -805,6 +905,7 @@ export const works: Work[] = [
           ko: "스티커와 엽서 구성 안내",
           en: "Sticker and postcard information",
         },
+        marginTop: 180,
       },
       {
         type: "full",

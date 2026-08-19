@@ -32,28 +32,44 @@ export default function WorkDetailSidebar({ work }: WorkDetailSidebarProps) {
         </div>
       </div>
 
+      {/* DATE / CLIENT */}
       {(work.date || work.client) && (
         <div className="mt-2 grid grid-cols-[82px_1fr] gap-4 border-t border-black pt-2">
-          {work.date && (
-            <p className="text-[11px] leading-none text-[#222]">{work.date}</p>
-          )}
+          {/* DATE */}
+          <div>
+            {work.date && (
+              <p className="text-[11px] leading-none text-[#222]">
+                {work.date}
+              </p>
+            )}
+          </div>
 
-          {work.client && (
-            <p className="text-[11px] leading-none text-[#222]">
-              Client: {work.client}
-            </p>
-          )}
+          {/* CLIENT */}
+          <div>
+            {work.client && (
+              <p className="text-[11px] leading-none text-[#222]">
+                {work.client === "Personal"
+                  ? "Personal"
+                  : `Client: ${work.client}`}
+              </p>
+            )}
+          </div>
         </div>
       )}
 
-      {work.credit && (
-        <p className="mt-5 text-[11px] leading-[1.3]">{work.credit[lang]}</p>
-      )}
+      {/* CREDIT */}
+      {/* {work.credit && (
+        <p className="mt-5 whitespace-pre-line text-[11px] leading-[1.3]">
+          {work.credit[lang]}
+        </p>
+      )} */}
 
+      {/* NOTE */}
       {work.note && (
         <p className="mt-3 text-[11px] leading-[1.3]">{work.note[lang]}</p>
       )}
 
+      {/* EXTERNAL LINKS */}
       {work.externalLinks && work.externalLinks.length > 0 && (
         <div className="mt-5 flex flex-col gap-1">
           {work.externalLinks.map((link) => (
