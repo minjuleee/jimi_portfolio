@@ -135,7 +135,7 @@ export const works: Work[] = [
 
     title: {
       ko: "나도, 날개옷!",
-      en: "I Want Wing Clothes!",
+      en: "I Want Wing Clothes!\n[나도, 날개옷!]",
     },
 
     category: {
@@ -150,7 +150,7 @@ export const works: Work[] = [
 
     client: "NEWDOT",
 
-    thumbnail: "/images/i-want-wing-clothes/book-cover.png",
+    thumbnail: "/images/i-want-wing-clothes/thumbnail.png",
 
     media: [
       {
@@ -196,19 +196,66 @@ export const works: Work[] = [
     },
 
     description: {
-      ko: "Hey JUD의 2026 SS 컬렉션을 위해 노트북 가방과 테니스 가방에 사용되는 라벨 디자인과 제품 디자인을 진행했습니다.",
-      en: "I designed the labels and products for Hey JUD’s SS collection, including a laptop bag and a tennis bag.",
+      ko: "Hey JUD의 2026 SS 컬렉션을 위해 노트북 가방과 테니스 가방의 제품 디자인 및 라벨 그래픽을 디자인했습니다. 또한 컬렉션과 함께 활용되는 키링과 패키지 디자인을 진행했습니다.",
+      en: "Designed products and label graphics for Hey JUD’s 2026 SS collection, including laptop bags and tennis bags. I also developed matching keyrings and packaging for the collection.",
     },
 
     date: "May 2026",
     client: "Hey JUD",
 
+    externalLinks: [
+      {
+        label: {
+          ko: "Hey JUD 웹사이트",
+          en: "Hey JUD Website",
+        },
+        href: "http://www.heyjud.com",
+      },
+    ],
+
     thumbnail: "/images/hey-jud-2026-ss/label-design.png",
 
     media: [
+      // Label Design
       {
         type: "full",
         src: "/images/hey-jud-2026-ss/label-design.png",
+      },
+
+      // Orange Laptop Bag
+      {
+        type: "full",
+        src: "/images/hey-jud-2026-ss/laptop-bag-orange.jpg",
+      },
+
+      // Navy Laptop Bag
+      {
+        type: "full",
+        src: "/images/hey-jud-2026-ss/laptop-bag-navy.jpg",
+      },
+
+      // Orange Tennis Bag
+      {
+        type: "full",
+        src: "/images/hey-jud-2026-ss/tennis-bag-orange.png",
+      },
+
+      // Navy Tennis Bag
+      {
+        type: "full",
+        src: "/images/hey-jud-2026-ss/tennis-bag-navy.png",
+      },
+
+      // Character Keyrings
+      {
+        type: "full",
+        src: "/images/hey-jud-2026-ss/keyrings.png",
+      },
+
+      // Packaging
+      {
+        type: "full",
+        src: "/images/hey-jud-2026-ss/packaging.png",
       },
     ],
   },
@@ -219,7 +266,7 @@ export const works: Work[] = [
 
     title: {
       ko: "한국 크리스마스 오너먼트 카드",
-      en: "Korean Christmas Ornament Card",
+      en: "Korean Christmas Ornament Card\n[복(福)을 담은 크리스마스 카드]",
     },
 
     category: {
@@ -540,7 +587,7 @@ export const works: Work[] = [
 
     title: {
       ko: "우당탕탕 헬스장",
-      en: "Bustling Gym",
+      en: "Bustling Gym\n[우당탕탕 헬스장]",
     },
 
     category: {

@@ -31,7 +31,7 @@ const SOCIAL_LINKS = [
   },
   {
     label: "Email",
-    href: "mailto:YOUR_EMAIL@example.com",
+    href: "mailto:jimileedesign@gmail.com",
     icon: FaEnvelope,
     external: false,
   },
@@ -48,7 +48,7 @@ export default function Header() {
           JIMI LEE
         </Link>
 
-        <nav className="flex items-center gap-5 text-[18px] font-normal leading-none text-black sm:gap-7 sm:text-[20px]">
+        <nav className="flex items-center gap-5 text-[18px] font-extrabold leading-none text-black sm:gap-7 sm:text-[20px]">
           {NAV_LINKS.map((item) => (
             <Link
               key={item.href}
@@ -71,7 +71,10 @@ export default function Header() {
                 aria-label={item.label}
                 className="transition-opacity hover:opacity-50"
               >
-                <Icon size={22} />
+                <Icon
+                  size={22}
+                  strokeWidth={item.label === "Instagram" ? 4 : 2.2}
+                />
               </a>
             );
           })}

@@ -14,7 +14,7 @@ export default function WorkDetailSidebar({ work }: WorkDetailSidebarProps) {
     <aside className="h-fit lg:sticky lg:top-28">
       <div className="grid grid-cols-[82px_1fr] gap-4">
         {/* TITLE */}
-        <h1 className="text-[13px] font-semibold leading-[1.05] tracking-[-0.02em]">
+        <h1 className="whitespace-pre-line text-[13px] font-semibold leading-[1.05] tracking-[-0.02em]">
           {work.title[lang]}
         </h1>
 

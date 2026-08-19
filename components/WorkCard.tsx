@@ -44,7 +44,7 @@ export default function WorkCard({
         )}
 
         <div className="absolute inset-0 flex items-center justify-center bg-black/45 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <h2 className="px-4 text-center text-[22px] font-medium tracking-[0.03em] text-white sm:text-2xl">
+          <h2 className="whitespace-pre-line px-4 text-center text-[22px] font-medium tracking-[0.03em] text-white sm:text-2xl">
             {work.title[lang]}
           </h2>
         </div>
