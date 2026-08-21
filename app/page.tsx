@@ -1,3 +1,4 @@
+import ListScrollRestoration from "@/components/ListScrollRestoration";
 import WorkCard from "@/components/WorkCard";
 import { works } from "@/data/works";
 
@@ -59,8 +60,7 @@ export default function HomePage() {
 
   // ==============================
   // TABLET ORDER
-  // 기본적으로 모바일 순서를
-  // 왼쪽 → 오른쪽 순서로 배치
+  // 모바일 순서를 왼쪽 → 오른쪽으로 배치
   // ==============================
   const tabletLeft = mobileOrder.filter((_, index) => index % 2 === 0);
 
@@ -81,6 +81,9 @@ export default function HomePage() {
 
   return (
     <main className="pt-[90px]">
+      {/* 목록으로 돌아왔을 때 이전 스크롤 위치 복원 */}
+      <ListScrollRestoration />
+
       {/* ============================== */}
       {/* MOBILE: 1열 */}
       {/* md 미만에서만 표시 */}

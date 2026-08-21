@@ -1,3 +1,4 @@
+import ScrollToTop from "@/components/ScrollToTop";
 import WorkDetailClient from "@/components/WorkDetailClient";
 import { getWorkBySlug, works } from "@/data/works";
 import { notFound } from "next/navigation";
@@ -34,12 +35,16 @@ export default async function WorkDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-
   const work = getWorkBySlug(slug);
 
   if (!work) {
     notFound();
   }
 
-  return <WorkDetailClient work={work} />;
+  return (
+    <>
+      <ScrollToTop />
+      <WorkDetailClient work={work} />
+    </>
+  );
 }
