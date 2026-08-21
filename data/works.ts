@@ -714,12 +714,12 @@ export const works: Work[] = [
     date: "May 2024",
     client: "Personal",
 
-    thumbnail: "/images/animals-are-not-for-sale/poster.png",
+    thumbnail: "/images/animals-are-not-for-sale/thumbnail.webp",
 
     media: [
       {
         type: "full",
-        src: "/images/animals-are-not-for-sale/poster.png",
+        src: "/images/animals-are-not-for-sale/poster.webp",
       },
     ],
   },
