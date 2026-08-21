@@ -10,7 +10,7 @@ const NAV_LINKS = [
     href: "/",
   },
   {
-    label: "Drawing",
+    label: "Others",
     href: "/drawing/coming-soon",
   },
   {

@@ -25,6 +25,7 @@ type MediaVideoProps = {
 function MediaVideo({ block, index }: MediaVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // autoPlay이 false가 아니면 GIF처럼 반복 재생
   const isGifStyle = block.autoPlay !== false;
 
   const videoWidth =
@@ -41,124 +42,98 @@ function MediaVideo({ block, index }: MediaVideoProps) {
   useEffect(() => {
     const video = videoRef.current;
 
-    if (!video) return;
+    if (!video || !isGifStyle) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+
+    const tryPlay = () => {
+      if (!video.paused) return;
+
+      video.play().catch(() => {
+        // 저전력 모드 등으로 자동재생이 차단되면 무시
+      });
+    };
 
     /*
-     * iOS Safari autoplay 안정화
+     * 영상이 실제 화면 근처에 왔을 때만 재생한다.
+     * 페이지 진입 직후 모든 영상을 재생하지 않게 해서
+     * 첫 이미지 로딩을 우선한다.
      */
-    if (isGifStyle) {
-      video.muted = true;
-      video.defaultMuted = true;
-
-      const tryPlay = () => {
-        if (!video.paused) return;
-
-        video.play().catch(() => {
-          // 모바일 브라우저에서 autoplay가 막히는 경우 무시
-        });
-      };
-
-      /*
-       * 화면 근처에 들어왔을 때만 재생
-       */
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            tryPlay();
-          } else {
-            video.pause();
-          }
-        },
-        {
-          rootMargin: "300px 0px",
-          threshold: 0.01,
-        },
-      );
-
-      observer.observe(video);
-
-      /*
-       * 다른 탭 갔다가 돌아왔을 때
-       * 모바일에서 영상이 멈춰버리는 현상 방지
-       */
-      const handleVisibilityChange = () => {
-        if (
-          document.visibilityState === "visible" &&
-          video.getBoundingClientRect().top < window.innerHeight &&
-          video.getBoundingClientRect().bottom > 0
-        ) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
           tryPlay();
+        } else {
+          video.pause();
         }
-      };
+      },
+      {
+        rootMargin: "300px 0px",
+        threshold: 0.01,
+      },
+    );
 
-      /*
-       * Safari 뒤로가기 캐시 복원 대응
-       */
-      const handlePageShow = () => {
-        if (
-          video.getBoundingClientRect().top < window.innerHeight &&
-          video.getBoundingClientRect().bottom > 0
-        ) {
-          tryPlay();
-        }
-      };
+    observer.observe(video);
 
-      document.addEventListener("visibilitychange", handleVisibilityChange);
-
-      window.addEventListener("pageshow", handlePageShow);
-
-      /*
-       * 최초 진입 시 한 번 재생 시도
-       */
-      tryPlay();
-
-      return () => {
-        observer.disconnect();
-
-        document.removeEventListener(
-          "visibilitychange",
-          handleVisibilityChange,
-        );
-
-        window.removeEventListener("pageshow", handlePageShow);
-
+    /*
+     * 다른 탭에서 돌아왔을 때
+     * 현재 보이는 영상만 다시 재생
+     */
+    const handleVisibilityChange = () => {
+      if (document.visibilityState !== "visible") {
         video.pause();
-      };
-    }
+        return;
+      }
+
+      const rect = video.getBoundingClientRect();
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+
+      if (isVisible) {
+        tryPlay();
+      }
+    };
+
+    /*
+     * Safari 뒤로가기 캐시 복원 대응
+     */
+    const handlePageShow = () => {
+      const rect = video.getBoundingClientRect();
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+
+      if (isVisible) {
+        tryPlay();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    window.addEventListener("pageshow", handlePageShow);
+
+    return () => {
+      observer.disconnect();
+
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+
+      window.removeEventListener("pageshow", handlePageShow);
+
+      video.pause();
+    };
   }, [isGifStyle]);
 
   /*
-   * poster가 없는 일반 영상의 경우
-   * iPhone에서 검은 화면 / 빈 화면 대신
-   * 첫 프레임을 보여주기 위한 fallback
+   * poster가 없는 일반 영상은 첫 프레임 표시
    */
   const handleLoadedMetadata = () => {
     const video = videoRef.current;
 
-    if (!video) return;
+    if (!video || isGifStyle || block.poster) return;
 
-    if (!isGifStyle && !block.poster) {
-      try {
-        /*
-         * 정확히 0초에서는 Safari가
-         * 프레임을 렌더링하지 않는 경우가 있어서
-         * 아주 조금 이동시킴
-         */
-        video.currentTime = 0.01;
-      } catch {
-        // seek 실패 시 무시
-      }
+    try {
+      video.currentTime = 0.01;
+    } catch {
+      // Safari에서 seek가 실패하면 무시
     }
-  };
-
-  const handleCanPlay = () => {
-    const video = videoRef.current;
-
-    if (!video || !isGifStyle) return;
-
-    video.play().catch(() => {
-      // autoplay 제한 시 무시
-    });
   };
 
   return (
@@ -170,14 +145,13 @@ function MediaVideo({ block, index }: MediaVideoProps) {
         ref={videoRef}
         src={block.src}
         poster={block.poster}
-        autoPlay={isGifStyle}
+        autoPlay={false}
         muted={isGifStyle}
         loop={isGifStyle}
         controls={!isGifStyle}
         playsInline
-        preload={block.poster ? "metadata" : "auto"}
+        preload="metadata"
         onLoadedMetadata={handleLoadedMetadata}
-        onCanPlay={handleCanPlay}
         className={`block h-auto max-w-full ${videoWidth}`}
       >
         Your browser does not support the video tag.
@@ -198,8 +172,8 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
   }
 
   /*
-   * sectionText나 video보다 뒤에 이미지가 있어도
-   * 실제 첫 번째 이미지를 우선 다운로드하기 위함
+   * sectionText 또는 video가 먼저 있어도
+   * 실제 첫 번째 이미지 블록을 찾는다.
    */
   const firstImageIndex = work.media.findIndex(
     (block) =>
@@ -212,30 +186,21 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
   return (
     <section className="min-w-0 overflow-x-hidden">
       {work.media.map((block, index) => {
-        /*
-         * 첫 이미지와 그 주변 콘텐츠는 바로 로드
-         * 나머지는 lazy loading
-         */
-        const eager =
-          index === firstImageIndex ||
-          index === firstImageIndex + 1 ||
-          index === 0;
+        const isFirstImageBlock = index === firstImageIndex;
 
         /* ----------------------------------------
            FULL IMAGE
         ---------------------------------------- */
 
         if (block.type === "full") {
-          const isFirstImage = index === firstImageIndex;
-
           return (
             <img
               key={`${block.src}-${index}`}
               src={block.src}
               alt={block.alt?.[lang] ?? ""}
-              loading={isFirstImage || eager ? "eager" : "lazy"}
-              decoding={isFirstImage ? "sync" : "async"}
-              fetchPriority={isFirstImage ? "high" : "auto"}
+              loading={isFirstImageBlock ? "eager" : "lazy"}
+              decoding={isFirstImageBlock ? "sync" : "async"}
+              fetchPriority={isFirstImageBlock ? "high" : "auto"}
               draggable={false}
               style={{
                 marginTop:
@@ -255,40 +220,38 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
         ---------------------------------------- */
 
         if (block.type === "split") {
-          const isFirstImage = index === firstImageIndex;
-
           return (
             <div
               key={`split-${index}`}
               className="mt-1 grid min-w-0 grid-cols-1 gap-1 sm:grid-cols-2"
             >
-              {block.items.map((item, itemIndex) => (
-                <div
-                  key={`${item.src}-${itemIndex}`}
-                  className="min-w-0 overflow-hidden"
-                >
-                  <img
-                    src={item.src}
-                    alt={item.alt?.[lang] ?? ""}
-                    loading={isFirstImage || eager ? "eager" : "lazy"}
-                    decoding={
-                      isFirstImage && itemIndex === 0 ? "sync" : "async"
-                    }
-                    fetchPriority={
-                      isFirstImage && itemIndex === 0 ? "high" : "auto"
-                    }
-                    draggable={false}
-                    className="
-                      block
-                      h-auto
-                      w-full
-                      max-w-full
-                      sm:h-full
-                      sm:object-cover
-                    "
-                  />
-                </div>
-              ))}
+              {block.items.map((item, itemIndex) => {
+                const isFirstSplitImage = isFirstImageBlock && itemIndex === 0;
+
+                return (
+                  <div
+                    key={`${item.src}-${itemIndex}`}
+                    className="min-w-0 overflow-hidden"
+                  >
+                    <img
+                      src={item.src}
+                      alt={item.alt?.[lang] ?? ""}
+                      loading={isFirstSplitImage ? "eager" : "lazy"}
+                      decoding={isFirstSplitImage ? "sync" : "async"}
+                      fetchPriority={isFirstSplitImage ? "high" : "auto"}
+                      draggable={false}
+                      className="
+                        block
+                        h-auto
+                        w-full
+                        max-w-full
+                        sm:h-full
+                        sm:object-cover
+                      "
+                    />
+                  </div>
+                );
+              })}
             </div>
           );
         }
@@ -298,8 +261,6 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
         ---------------------------------------- */
 
         if (block.type === "collage") {
-          const isFirstImage = index === firstImageIndex;
-
           return (
             <div
               key={`collage-${index}`}
@@ -313,14 +274,13 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
               "
             >
               {/* LEFT BIG IMAGE */}
-
               <div className="min-w-0 overflow-hidden sm:aspect-[3/4]">
                 <img
                   src={block.left.src}
                   alt={block.left.alt?.[lang] ?? ""}
-                  loading={isFirstImage || eager ? "eager" : "lazy"}
-                  decoding={isFirstImage ? "sync" : "async"}
-                  fetchPriority={isFirstImage ? "high" : "auto"}
+                  loading={isFirstImageBlock ? "eager" : "lazy"}
+                  decoding={isFirstImageBlock ? "sync" : "async"}
+                  fetchPriority={isFirstImageBlock ? "high" : "auto"}
                   draggable={false}
                   className="
                     block
@@ -334,7 +294,6 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
               </div>
 
               {/* RIGHT TWO IMAGES */}
-
               <div className="grid min-w-0 gap-1 sm:grid-rows-2">
                 {block.right.map((item, itemIndex) => (
                   <div
@@ -344,17 +303,18 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
                     <img
                       src={item.src}
                       alt={item.alt?.[lang] ?? ""}
-                      loading={isFirstImage || eager ? "eager" : "lazy"}
+                      loading="lazy"
                       decoding="async"
+                      fetchPriority="auto"
                       draggable={false}
                       className="
-                        block
-                        h-auto
-                        w-full
-                        max-w-full
-                        sm:h-full
-                        sm:object-cover
-                      "
+                          block
+                          h-auto
+                          w-full
+                          max-w-full
+                          sm:h-full
+                          sm:object-cover
+                        "
                     />
                   </div>
                 ))}
@@ -368,8 +328,6 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
         ---------------------------------------- */
 
         if (block.type === "center") {
-          const isFirstImage = index === firstImageIndex;
-
           const imageWidth =
             block.width === "small"
               ? "w-[50%]"
@@ -392,9 +350,9 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
               <img
                 src={block.src}
                 alt={block.alt?.[lang] ?? ""}
-                loading={isFirstImage || eager ? "eager" : "lazy"}
-                decoding={isFirstImage ? "sync" : "async"}
-                fetchPriority={isFirstImage ? "high" : "auto"}
+                loading={isFirstImageBlock ? "eager" : "lazy"}
+                decoding={isFirstImageBlock ? "sync" : "async"}
+                fetchPriority={isFirstImageBlock ? "high" : "auto"}
                 draggable={false}
                 className={`block h-auto max-w-full ${imageWidth}`}
               />

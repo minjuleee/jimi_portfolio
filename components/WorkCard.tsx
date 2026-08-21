@@ -17,7 +17,8 @@ export default function WorkCard({
   return (
     <Link
       href={`/works/${work.slug}`}
-      className="group relative mb-1 block w-full break-inside-avoid overflow-hidden bg-white"
+      scroll
+      className="group relative mb-1 block w-full break-inside-avoid overflow-hidden bg-[#f5f5f5]"
     >
       <div className="relative w-full overflow-hidden">
         {work.thumbnailType === "video" ? (
@@ -27,8 +28,9 @@ export default function WorkCard({
             muted
             loop
             playsInline
-            preload="metadata"
-            className="block h-auto w-full transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+            preload={priority ? "auto" : "metadata"}
+            aria-label={work.title[lang]}
+            className="block h-auto w-full bg-[#f5f5f5] transition-transform duration-500 ease-out group-hover:scale-[1.02]"
           />
         ) : (
           <Image
@@ -37,8 +39,14 @@ export default function WorkCard({
             width={1200}
             height={1600}
             priority={priority}
-            quality={80}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : "auto"}
+            quality={75}
+            sizes="
+              (max-width: 767px) calc(100vw - 8px),
+              (max-width: 1023px) calc(50vw - 6px),
+              calc(33.333vw - 6px)
+            "
             className="block h-auto w-full transition-transform duration-500 ease-out group-hover:scale-[1.02]"
           />
         )}
