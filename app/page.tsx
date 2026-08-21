@@ -4,9 +4,9 @@ import { works } from "@/data/works";
 export default function HomePage() {
   // ==============================
   // DESKTOP ORDER
-  // 기존 웹 버전 그대로 유지
+  // lg 이상: 기존 3열 순서 유지
   // ==============================
-  const columns = [
+  const desktopColumns = [
     // LEFT
     [
       "work-hard-play-heart",
@@ -37,7 +37,7 @@ export default function HomePage() {
 
   // ==============================
   // MOBILE ORDER
-  // 모바일에서만 적용
+  // 모바일 1열 순서
   // ==============================
   const mobileOrder = [
     "work-hard-play-heart",
@@ -57,6 +57,24 @@ export default function HomePage() {
     "lets-clay-sticker",
   ];
 
+  // ==============================
+  // TABLET ORDER
+  // 기본적으로 모바일 순서를
+  // 왼쪽 → 오른쪽 순서로 배치
+  // ==============================
+  const tabletLeft = mobileOrder.filter((_, index) => index % 2 === 0);
+
+  const tabletRight = mobileOrder.filter((_, index) => index % 2 === 1);
+
+  // 왼쪽 마지막 작품
+  const lastLeftWork = tabletLeft.at(-1);
+
+  // 왼쪽 마지막 작품을 오른쪽 맨 아래로 이동
+  const tabletColumns = [
+    tabletLeft.slice(0, -1),
+    lastLeftWork ? [...tabletRight, lastLeftWork] : tabletRight,
+  ];
+
   const getWork = (slug: string) => {
     return works.find((work) => work.slug === slug);
   };
@@ -64,8 +82,8 @@ export default function HomePage() {
   return (
     <main className="pt-[90px]">
       {/* ============================== */}
-      {/* MOBILE */}
-      {/* md 미만에서만 보임 */}
+      {/* MOBILE: 1열 */}
+      {/* md 미만에서만 표시 */}
       {/* ============================== */}
       <section className="grid grid-cols-1 gap-[1px] px-[4px] pb-[60px] md:hidden">
         {mobileOrder.map((slug, index) => {
@@ -80,12 +98,32 @@ export default function HomePage() {
       </section>
 
       {/* ============================== */}
-      {/* DESKTOP */}
-      {/* 기존 웹 레이아웃 그대로 */}
+      {/* TABLET / SMALL WEB: 2열 */}
+      {/* md 이상, lg 미만에서만 표시 */}
       {/* ============================== */}
-      <section className="hidden gap-[4px] px-[4px] pb-[60px] md:grid md:grid-cols-2 lg:grid-cols-3">
-        {columns.map((column, columnIndex) => (
-          <div key={columnIndex} className="flex flex-col gap-[1px]">
+      <section className="hidden grid-cols-2 items-start gap-[4px] px-[4px] pb-[60px] md:grid lg:hidden">
+        {tabletColumns.map((column, columnIndex) => (
+          <div key={columnIndex} className="flex min-w-0 flex-col gap-[1px]">
+            {column.map((slug, index) => {
+              const work = getWork(slug);
+
+              if (!work) return null;
+
+              return (
+                <WorkCard key={work.slug} work={work} priority={index === 0} />
+              );
+            })}
+          </div>
+        ))}
+      </section>
+
+      {/* ============================== */}
+      {/* DESKTOP: 기존 3열 */}
+      {/* lg 이상에서만 표시 */}
+      {/* ============================== */}
+      <section className="hidden grid-cols-3 items-start gap-[4px] px-[4px] pb-[60px] lg:grid">
+        {desktopColumns.map((column, columnIndex) => (
+          <div key={columnIndex} className="flex min-w-0 flex-col gap-[1px]">
             {column.map((slug, index) => {
               const work = getWork(slug);
 

@@ -11,7 +11,7 @@ const NAV_LINKS = [
   },
   {
     label: "Drawing",
-    href: "/drawing",
+    href: "/drawing/coming-soon",
   },
   {
     label: "About",
@@ -44,11 +44,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = menuOpen ? "hidden" : "";
 
     return () => {
       document.body.style.overflow = "";
@@ -114,7 +110,7 @@ export default function Header() {
         </div>
       </header>
 
-      {/* MOBILE FULL SCREEN MENU */}
+      {/* MOBILE FULL-SCREEN MENU */}
       <div
         className={`fixed inset-0 z-[100] bg-white transition-all duration-300 md:hidden ${
           menuOpen

@@ -123,10 +123,6 @@ export const works: Work[] = [
         src: "/images/work-hard-play-heart/storyboard.png",
       },
       {
-        type: "full",
-        src: "/images/work-hard-play-heart/generated-images.png",
-      },
-      {
         type: "video",
         src: "/images/work-hard-play-heart/work-hard-play-heart.mp4",
         autoPlay: false,
@@ -524,12 +520,12 @@ export const works: Work[] = [
     date: "Mar 2023",
     client: "Personal",
 
-    thumbnail: "/images/soulmate-tennis-club/wimbledon_c.png",
+    thumbnail: "/images/soulmate-tennis-club/wimbledon.webp",
 
     media: [
       {
         type: "full",
-        src: "/images/soulmate-tennis-club/wimbledon_c.png",
+        src: "/images/soulmate-tennis-club/wimbledon.webp",
       },
       {
         type: "full",
@@ -560,12 +556,12 @@ export const works: Work[] = [
     date: "Mar 2023",
     client: "Personal",
 
-    thumbnail: "/images/soulmate-tennis-club/rado_c.png",
+    thumbnail: "/images/soulmate-tennis-club/rado.webp",
 
     media: [
       {
         type: "full",
-        src: "/images/soulmate-tennis-club/rado_c.png",
+        src: "/images/soulmate-tennis-club/rado.webp",
       },
       {
         type: "full",
@@ -596,12 +592,12 @@ export const works: Work[] = [
     date: "Mar 2023",
     client: "Personal",
 
-    thumbnail: "/images/soulmate-tennis-club/sera_c.png",
+    thumbnail: "/images/soulmate-tennis-club/sera.webp",
 
     media: [
       {
         type: "full",
-        src: "/images/soulmate-tennis-club/sera_c.png",
+        src: "/images/soulmate-tennis-club/sera.webp",
       },
       {
         type: "full",
@@ -632,12 +628,12 @@ export const works: Work[] = [
     date: "Mar 2023",
     client: "Personal",
 
-    thumbnail: "/images/soulmate-tennis-club/nadal_c.png",
+    thumbnail: "/images/soulmate-tennis-club/nadal.webp",
 
     media: [
       {
         type: "full",
-        src: "/images/soulmate-tennis-club/nadal_c.png",
+        src: "/images/soulmate-tennis-club/nadal.webp",
       },
       {
         type: "full",
@@ -849,13 +845,13 @@ export const works: Work[] = [
     },
 
     date: "May 2024",
-    thumbnail: "/images/find-jiho/poster.png",
+    thumbnail: "/images/find-jiho/thumbnail.webp",
     client: "Personal",
 
     media: [
       {
         type: "full",
-        src: "/images/find-jiho/poster.png",
+        src: "/images/find-jiho/poster.webp",
         alt: {
           ko: "아동학대 피해 아동 발견 캠페인 포스터 - 지호를 찾아라!",
           en: "Child Abuse Awareness Campaign Poster - Find Jiho!",
