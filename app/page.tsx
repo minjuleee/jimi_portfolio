@@ -87,8 +87,9 @@ export default function HomePage() {
       {/* ============================== */}
       {/* MOBILE: 1열 */}
       {/* md 미만에서만 표시 */}
+      {/* 좌우 여백 없이 화면 끝까지 표시 */}
       {/* ============================== */}
-      <section className="grid grid-cols-1 gap-[1px] px-[4px] pb-[60px] md:hidden">
+      <section className="grid w-full grid-cols-1 gap-[1px] px-0 pb-[60px] md:hidden">
         {mobileOrder.map((slug, index) => {
           const work = getWork(slug);
 
