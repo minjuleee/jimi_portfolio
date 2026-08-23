@@ -55,11 +55,6 @@ function MediaVideo({ block, index }: MediaVideoProps) {
       });
     };
 
-    /*
-     * 영상이 실제 화면 근처에 왔을 때만 재생한다.
-     * 페이지 진입 직후 모든 영상을 재생하지 않게 해서
-     * 첫 이미지 로딩을 우선한다.
-     */
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -76,10 +71,6 @@ function MediaVideo({ block, index }: MediaVideoProps) {
 
     observer.observe(video);
 
-    /*
-     * 다른 탭에서 돌아왔을 때
-     * 현재 보이는 영상만 다시 재생
-     */
     const handleVisibilityChange = () => {
       if (document.visibilityState !== "visible") {
         video.pause();
@@ -94,9 +85,6 @@ function MediaVideo({ block, index }: MediaVideoProps) {
       }
     };
 
-    /*
-     * Safari 뒤로가기 캐시 복원 대응
-     */
     const handlePageShow = () => {
       const rect = video.getBoundingClientRect();
       const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
@@ -107,7 +95,6 @@ function MediaVideo({ block, index }: MediaVideoProps) {
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
-
     window.addEventListener("pageshow", handlePageShow);
 
     return () => {
@@ -183,8 +170,29 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
       block.type === "center",
   );
 
+  /*
+   * 모바일 / 태블릿:
+   * 부모의 padding과 max-width를 무시하고
+   * viewport 전체 너비(100vw)를 사용.
+   *
+   * lg 이상:
+   * 기존 웹 상세페이지 너비로 복귀.
+   */
+  const mobileFullBleed = `
+    relative
+    left-1/2
+    w-screen
+    max-w-none
+    -translate-x-1/2
+
+    lg:left-auto
+    lg:w-full
+    lg:max-w-full
+    lg:translate-x-0
+  `;
+
   return (
-    <section className="min-w-0 overflow-x-hidden">
+    <section className="min-w-0 overflow-visible">
       {work.media.map((block, index) => {
         const isFirstImageBlock = index === firstImageIndex;
 
@@ -194,24 +202,35 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
 
         if (block.type === "full") {
           return (
-            <img
+            <div
               key={`${block.src}-${index}`}
-              src={block.src}
-              alt={block.alt?.[lang] ?? ""}
-              loading={isFirstImageBlock ? "eager" : "lazy"}
-              decoding={isFirstImageBlock ? "sync" : "async"}
-              fetchPriority={isFirstImageBlock ? "high" : "auto"}
-              draggable={false}
+              className={`
+                ${mobileFullBleed}
+                ${index > 0 && block.marginTop === undefined ? "mt-1" : ""}
+              `}
               style={{
                 marginTop:
                   block.marginTop !== undefined
                     ? `${block.marginTop}px`
                     : undefined,
               }}
-              className={`block h-auto w-full max-w-full ${
-                index > 0 && block.marginTop === undefined ? "mt-1" : ""
-              }`}
-            />
+            >
+              <img
+                src={block.src}
+                alt={block.alt?.[lang] ?? ""}
+                loading={isFirstImageBlock ? "eager" : "lazy"}
+                decoding={isFirstImageBlock ? "sync" : "async"}
+                fetchPriority={isFirstImageBlock ? "high" : "auto"}
+                draggable={false}
+                className="
+                  block
+                  h-auto
+                  w-full
+                  max-w-none
+                  lg:max-w-full
+                "
+              />
+            </div>
           );
         }
 
@@ -223,7 +242,15 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
           return (
             <div
               key={`split-${index}`}
-              className="mt-1 grid min-w-0 grid-cols-1 gap-1 sm:grid-cols-2"
+              className={`
+                ${mobileFullBleed}
+                mt-1
+                grid
+                min-w-0
+                grid-cols-1
+                gap-1
+                sm:grid-cols-2
+              `}
             >
               {block.items.map((item, itemIndex) => {
                 const isFirstSplitImage = isFirstImageBlock && itemIndex === 0;
@@ -244,9 +271,10 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
                         block
                         h-auto
                         w-full
-                        max-w-full
+                        max-w-none
                         sm:h-full
                         sm:object-cover
+                        lg:max-w-full
                       "
                     />
                   </div>
@@ -264,14 +292,15 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
           return (
             <div
               key={`collage-${index}`}
-              className="
+              className={`
+                ${mobileFullBleed}
                 mt-1
                 grid
                 min-w-0
                 grid-cols-1
                 gap-1
                 sm:grid-cols-[3fr_2fr]
-              "
+              `}
             >
               {/* LEFT BIG IMAGE */}
               <div className="min-w-0 overflow-hidden sm:aspect-[3/4]">
@@ -286,9 +315,10 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
                     block
                     h-auto
                     w-full
-                    max-w-full
+                    max-w-none
                     sm:h-full
                     sm:object-cover
+                    lg:max-w-full
                   "
                 />
               </div>
@@ -308,13 +338,14 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
                       fetchPriority="auto"
                       draggable={false}
                       className="
-                          block
-                          h-auto
-                          w-full
-                          max-w-full
-                          sm:h-full
-                          sm:object-cover
-                        "
+                        block
+                        h-auto
+                        w-full
+                        max-w-none
+                        sm:h-full
+                        sm:object-cover
+                        lg:max-w-full
+                      "
                     />
                   </div>
                 ))}
@@ -325,6 +356,7 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
 
         /* ----------------------------------------
            CENTER IMAGE
+           기존 그대로
         ---------------------------------------- */
 
         if (block.type === "center") {
@@ -362,6 +394,7 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
 
         /* ----------------------------------------
            SECTION TEXT
+           기존 그대로
         ---------------------------------------- */
 
         if (block.type === "sectionText") {
@@ -415,6 +448,7 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
 
         /* ----------------------------------------
            VIDEO
+           기존 그대로
         ---------------------------------------- */
 
         if (block.type === "video") {
@@ -432,6 +466,7 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
 
       {/* ----------------------------------------
           CREDIT
+          기존 그대로
       ---------------------------------------- */}
 
       {work.credit && (
