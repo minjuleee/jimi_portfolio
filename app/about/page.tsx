@@ -7,7 +7,7 @@ export default function AboutPage() {
         {/* PROFILE IMAGE */}
         <div className="relative w-full lg:max-w-[520px]">
           <Image
-            src="/images/about/profile.jpg"
+            src="/images/about/profile.webp"
             alt="Jimi Lee"
             width={1200}
             height={1600}

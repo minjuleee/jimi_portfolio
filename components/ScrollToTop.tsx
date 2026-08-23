@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 
 export default function ScrollToTop() {
-  useEffect(() => {
+  useLayoutEffect(() => {
     window.scrollTo({
       top: 0,
       behavior: "auto",

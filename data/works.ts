@@ -108,19 +108,19 @@ export const works: Work[] = [
     media: [
       {
         type: "full",
-        src: "/images/work-hard-play-heart/character-sheet.png",
+        src: "/images/work-hard-play-heart/character-sheet.webp",
       },
       {
         type: "full",
-        src: "/images/work-hard-play-heart/tennis-character.png",
+        src: "/images/work-hard-play-heart/tennis-character.webp",
       },
       {
         type: "full",
-        src: "/images/work-hard-play-heart/product.png",
+        src: "/images/work-hard-play-heart/product.webp",
       },
       {
         type: "full",
-        src: "/images/work-hard-play-heart/storyboard.png",
+        src: "/images/work-hard-play-heart/storyboard.webp",
       },
       {
         type: "video",
@@ -218,7 +218,7 @@ export const works: Work[] = [
 
     description: {
       ko: "Hey JUD의 2026 SS 컬렉션을 위해 노트북 가방과 테니스 가방의 제품 디자인 및 라벨 그래픽을 디자인했습니다. 또한 컬렉션과 함께 활용되는 키링과 패키지 디자인을 진행했습니다.",
-      en: "Designed products and label graphics for Hey JUD’s 2026 SS collection, including laptop bags and tennis bags. I also developed matching keyrings and packaging for the collection.",
+      en: "I designed the labels and products for Hey JUD’s SS collection, including laptop bags, tennis bags, and Keyrings.",
     },
 
     date: "May 2026",
@@ -246,37 +246,37 @@ export const works: Work[] = [
       // Orange Laptop Bag
       {
         type: "full",
-        src: "/images/hey-jud-2026-ss/laptop-bag-orange.jpg",
+        src: "/images/hey-jud-2026-ss/laptop-bag-orange.webp",
       },
 
       // Navy Laptop Bag
       {
         type: "full",
-        src: "/images/hey-jud-2026-ss/laptop-bag-navy.jpg",
+        src: "/images/hey-jud-2026-ss/laptop-bag-navy.webp",
       },
 
       // Orange Tennis Bag
       {
         type: "full",
-        src: "/images/hey-jud-2026-ss/tennis-bag-orange.png",
+        src: "/images/hey-jud-2026-ss/tennis-bag-orange.webp",
       },
 
       // Navy Tennis Bag
       {
         type: "full",
-        src: "/images/hey-jud-2026-ss/tennis-bag-navy.png",
+        src: "/images/hey-jud-2026-ss/tennis-bag-navy.webp",
       },
 
       // Character Keyrings
       {
         type: "full",
-        src: "/images/hey-jud-2026-ss/keyrings.png",
+        src: "/images/hey-jud-2026-ss/keyrings.webp",
       },
 
       // Packaging
       {
         type: "full",
-        src: "/images/hey-jud-2026-ss/packaging.png",
+        src: "/images/hey-jud-2026-ss/packaging.webp",
       },
     ],
   },
@@ -303,21 +303,21 @@ export const works: Work[] = [
     date: "Apr 2025",
     client: "Hey JUD",
 
-    thumbnail: "/images/christmas-card/mockup.png",
+    thumbnail: "/images/christmas-card/mockup.webp",
 
     media: [
       {
         type: "full",
-        src: "/images/christmas-card/mockup.png",
+        src: "/images/christmas-card/mockup.webp",
       },
       {
         type: "split",
         items: [
           {
-            src: "/images/christmas-card/tree.png",
+            src: "/images/christmas-card/tree.webp",
           },
           {
-            src: "/images/christmas-card/card.JPG",
+            src: "/images/christmas-card/card.webp",
           },
         ],
       },
@@ -351,16 +351,16 @@ export const works: Work[] = [
     date: "Nov 2024",
     client: "Hey JUD",
 
-    thumbnail: "/images/soulmate-christmas/card.jpg",
+    thumbnail: "/images/soulmate-christmas/card.webp",
 
     media: [
       {
         type: "full",
-        src: "/images/soulmate-christmas/card.jpg",
+        src: "/images/soulmate-christmas/card.webp",
       },
       {
         type: "full",
-        src: "/images/soulmate-christmas/mockup.png",
+        src: "/images/soulmate-christmas/mockup.webp",
       },
     ],
   },
@@ -664,20 +664,20 @@ export const works: Work[] = [
     date: "Apr 2024",
     client: "Personal",
 
-    thumbnail: "/images/bustling-gym/cover.png",
+    thumbnail: "/images/bustling-gym/cover.webp",
 
     media: [
       {
         type: "full",
-        src: "/images/bustling-gym/cover.png",
+        src: "/images/bustling-gym/cover.webp",
       },
       {
         type: "full",
-        src: "/images/bustling-gym/mockup.png",
+        src: "/images/bustling-gym/mockup.webp",
       },
       {
         type: "full",
-        src: "/images/bustling-gym/illustrations.png",
+        src: "/images/bustling-gym/illustrations.webp",
       },
       {
         type: "video",
@@ -742,7 +742,7 @@ export const works: Work[] = [
     date: "Dec 2023",
     client: "Personal",
 
-    thumbnail: "/images/dustins-awesome-pack/awesome-pack.jpg",
+    thumbnail: "/images/dustins-awesome-pack/awesome-pack.webp",
 
     media: [
       {
@@ -765,49 +765,49 @@ export const works: Work[] = [
       },
       {
         type: "full",
-        src: "/images/dustins-awesome-pack/awesome-pack.jpg",
+        src: "/images/dustins-awesome-pack/awesome-pack.webp",
       },
       {
         type: "full",
-        src: "/images/dustins-awesome-pack/awesome-pack-info.png",
+        src: "/images/dustins-awesome-pack/awesome-pack-info.webp",
       },
       {
         type: "collage",
 
         left: {
-          src: "/images/dustins-awesome-pack/awesome-pack-products-1.jpg",
+          src: "/images/dustins-awesome-pack/awesome-pack-products-1.webp",
         },
 
         right: [
           {
-            src: "/images/dustins-awesome-pack/awesome-pack-products-2.jpg",
+            src: "/images/dustins-awesome-pack/awesome-pack-products-2.webp",
           },
           {
-            src: "/images/dustins-awesome-pack/awesome-pack-products-3.jpg",
+            src: "/images/dustins-awesome-pack/awesome-pack-products-3.webp",
           },
         ],
       },
       {
         type: "full",
-        src: "/images/dustins-awesome-pack/records-info.png",
+        src: "/images/dustins-awesome-pack/records-info.webp",
       },
       {
         type: "full",
-        src: "/images/dustins-awesome-pack/records-products-1.jpg",
+        src: "/images/dustins-awesome-pack/records-products-1.webp",
       },
 
       {
         type: "split",
         items: [
           {
-            src: "/images/dustins-awesome-pack/records-products-2.jpg",
+            src: "/images/dustins-awesome-pack/records-products-2.webp",
             alt: {
               ko: "더스틴 노트",
               en: "Dustin's notebook",
             },
           },
           {
-            src: "/images/dustins-awesome-pack/records-products-3.jpg",
+            src: "/images/dustins-awesome-pack/records-products-3.webp",
             alt: {
               ko: "더스틴 스티커",
               en: "Dustin's sticker",
@@ -879,7 +879,7 @@ export const works: Work[] = [
       en: "I created clay-like story figures inspired by a child's handmade creations and developed them into a colorful stationery brand.",
     },
 
-    thumbnail: "/images/lets-clay-sticker/illustration.jpg",
+    thumbnail: "/images/lets-clay-sticker/illustration.webp",
 
     date: "Dec 2023",
     client: "Personal",
@@ -887,7 +887,7 @@ export const works: Work[] = [
     media: [
       {
         type: "center",
-        src: "/images/lets-clay-sticker/illustration.jpg",
+        src: "/images/lets-clay-sticker/illustration.webp",
         alt: {
           ko: "Let's Clay Sticker 메인 일러스트",
           en: "Let's Clay Sticker main illustration",
@@ -896,7 +896,7 @@ export const works: Work[] = [
       },
       {
         type: "full",
-        src: "/images/lets-clay-sticker/info.png",
+        src: "/images/lets-clay-sticker/info.webp",
         alt: {
           ko: "스티커와 엽서 구성 안내",
           en: "Sticker and postcard information",
@@ -905,7 +905,7 @@ export const works: Work[] = [
       },
       {
         type: "full",
-        src: "/images/lets-clay-sticker/products-1.jpg",
+        src: "/images/lets-clay-sticker/products-1.webp",
         alt: {
           ko: "Let's Clay Sticker 제품 이미지",
           en: "Let's Clay Sticker product image",
@@ -915,14 +915,14 @@ export const works: Work[] = [
         type: "split",
         items: [
           {
-            src: "/images/lets-clay-sticker/sticker-1.jpg",
+            src: "/images/lets-clay-sticker/sticker-1.webp",
             alt: {
               ko: "클레이 스티커 활용 이미지",
               en: "Clay sticker application",
             },
           },
           {
-            src: "/images/lets-clay-sticker/sticker-2.jpg",
+            src: "/images/lets-clay-sticker/sticker-2.webp",
             alt: {
               ko: "클레이 스티커 활용 이미지",
               en: "Clay sticker application",
@@ -934,14 +934,14 @@ export const works: Work[] = [
         type: "split",
         items: [
           {
-            src: "/images/lets-clay-sticker/sticker-3.jpg",
+            src: "/images/lets-clay-sticker/sticker-3.webp",
             alt: {
               ko: "클레이 스티커 활용 이미지",
               en: "Clay sticker application",
             },
           },
           {
-            src: "/images/lets-clay-sticker/sticker-4.jpg",
+            src: "/images/lets-clay-sticker/sticker-4.webp",
             alt: {
               ko: "클레이 스티커 활용 이미지",
               en: "Clay sticker application",
