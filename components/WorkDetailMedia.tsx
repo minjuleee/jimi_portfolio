@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Work } from "@/data/works";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type WorkDetailMediaProps = {
   work: Work;
@@ -25,6 +25,9 @@ type MediaVideoProps = {
 function MediaVideo({ block, index }: MediaVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  const [isReady, setIsReady] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
   // autoPlay이 false가 아니면 GIF처럼 반복 재생
   const isGifStyle = block.autoPlay !== false;
 
@@ -42,7 +45,7 @@ function MediaVideo({ block, index }: MediaVideoProps) {
   useEffect(() => {
     const video = videoRef.current;
 
-    if (!video || !isGifStyle) return;
+    if (!video || !isGifStyle || hasError) return;
 
     video.muted = true;
     video.defaultMuted = true;
@@ -51,7 +54,8 @@ function MediaVideo({ block, index }: MediaVideoProps) {
       if (!video.paused) return;
 
       video.play().catch(() => {
-        // 저전력 모드 등으로 자동재생이 차단되면 무시
+        // iPhone Safari 저전력 모드 등에서
+        // 자동재생이 막혀도 그냥 무시
       });
     };
 
@@ -78,6 +82,7 @@ function MediaVideo({ block, index }: MediaVideoProps) {
       }
 
       const rect = video.getBoundingClientRect();
+
       const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
 
       if (isVisible) {
@@ -87,6 +92,7 @@ function MediaVideo({ block, index }: MediaVideoProps) {
 
     const handlePageShow = () => {
       const rect = video.getBoundingClientRect();
+
       const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
 
       if (isVisible) {
@@ -95,6 +101,7 @@ function MediaVideo({ block, index }: MediaVideoProps) {
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
+
     window.addEventListener("pageshow", handlePageShow);
 
     return () => {
@@ -106,27 +113,67 @@ function MediaVideo({ block, index }: MediaVideoProps) {
 
       video.pause();
     };
-  }, [isGifStyle]);
+  }, [isGifStyle, hasError]);
 
   /*
-   * poster가 없는 일반 영상은 첫 프레임 표시
+   * 일반 영상(autoPlay: false)의 경우
+   * poster가 없으면 첫 프레임을 보여주기 위해
+   * 아주 살짝 앞으로 이동
    */
   const handleLoadedMetadata = () => {
     const video = videoRef.current;
 
-    if (!video || isGifStyle || block.poster) return;
+    if (!video) return;
 
-    try {
-      video.currentTime = 0.01;
-    } catch {
-      // Safari에서 seek가 실패하면 무시
+    if (!isGifStyle && !block.poster) {
+      try {
+        video.currentTime = 0.01;
+      } catch {
+        // Safari seek 실패 시 무시
+      }
     }
   };
+
+  /*
+   * 실제 영상 데이터가 준비되었을 때만
+   * opacity를 1로 변경
+   *
+   * => Safari에서 로딩 중 깨진 영상 / 물음표
+   * 표시가 노출되는 것 방지
+   */
+  const handleLoadedData = () => {
+    setIsReady(true);
+    setHasError(false);
+  };
+
+  const handleCanPlay = () => {
+    setIsReady(true);
+  };
+
+  /*
+   * iPhone Safari가 MP4를 읽지 못하거나
+   * 파일 경로가 잘못된 경우
+   * 깨진 미디어 아이콘 대신 아예 숨김
+   */
+  const handleError = () => {
+    setHasError(true);
+    setIsReady(false);
+  };
+
+  if (hasError) {
+    return null;
+  }
 
   return (
     <div
       key={`${block.src}-${index}`}
-      className="flex min-w-0 justify-center overflow-hidden pt-9"
+      className="
+        flex
+        min-w-0
+        justify-center
+        overflow-hidden
+        pt-9
+      "
     >
       <video
         ref={videoRef}
@@ -137,12 +184,22 @@ function MediaVideo({ block, index }: MediaVideoProps) {
         loop={isGifStyle}
         controls={!isGifStyle}
         playsInline
-        preload="metadata"
+        preload={isGifStyle ? "auto" : "metadata"}
         onLoadedMetadata={handleLoadedMetadata}
-        className={`block h-auto max-w-full ${videoWidth}`}
-      >
-        Your browser does not support the video tag.
-      </video>
+        onLoadedData={handleLoadedData}
+        onCanPlay={handleCanPlay}
+        onError={handleError}
+        draggable={false}
+        className={`
+          block
+          h-auto
+          max-w-full
+          transition-opacity
+          duration-200
+          ${videoWidth}
+          ${isReady ? "opacity-100" : "opacity-0"}
+        `}
+      />
     </div>
   );
 }
@@ -258,7 +315,10 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
                 return (
                   <div
                     key={`${item.src}-${itemIndex}`}
-                    className="min-w-0 overflow-hidden"
+                    className="
+                        min-w-0
+                        overflow-hidden
+                      "
                   >
                     <img
                       src={item.src}
@@ -268,14 +328,14 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
                       fetchPriority={isFirstSplitImage ? "high" : "auto"}
                       draggable={false}
                       className="
-                        block
-                        h-auto
-                        w-full
-                        max-w-none
-                        sm:h-full
-                        sm:object-cover
-                        lg:max-w-full
-                      "
+                          block
+                          h-auto
+                          w-full
+                          max-w-none
+                          sm:h-full
+                          sm:object-cover
+                          lg:max-w-full
+                        "
                     />
                   </div>
                 );
@@ -303,7 +363,13 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
               `}
             >
               {/* LEFT BIG IMAGE */}
-              <div className="min-w-0 overflow-hidden sm:aspect-[3/4]">
+              <div
+                className="
+                  min-w-0
+                  overflow-hidden
+                  sm:aspect-[3/4]
+                "
+              >
                 <img
                   src={block.left.src}
                   alt={block.left.alt?.[lang] ?? ""}
@@ -324,11 +390,21 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
               </div>
 
               {/* RIGHT TWO IMAGES */}
-              <div className="grid min-w-0 gap-1 sm:grid-rows-2">
+              <div
+                className="
+                  grid
+                  min-w-0
+                  gap-1
+                  sm:grid-rows-2
+                "
+              >
                 {block.right.map((item, itemIndex) => (
                   <div
                     key={`${item.src}-${itemIndex}`}
-                    className="min-w-0 overflow-hidden"
+                    className="
+                        min-w-0
+                        overflow-hidden
+                      "
                   >
                     <img
                       src={item.src}
@@ -338,14 +414,14 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
                       fetchPriority="auto"
                       draggable={false}
                       className="
-                        block
-                        h-auto
-                        w-full
-                        max-w-none
-                        sm:h-full
-                        sm:object-cover
-                        lg:max-w-full
-                      "
+                          block
+                          h-auto
+                          w-full
+                          max-w-none
+                          sm:h-full
+                          sm:object-cover
+                          lg:max-w-full
+                        "
                     />
                   </div>
                 ))}
@@ -356,7 +432,6 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
 
         /* ----------------------------------------
            CENTER IMAGE
-           기존 그대로
         ---------------------------------------- */
 
         if (block.type === "center") {
@@ -374,7 +449,12 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
           return (
             <div
               key={`${block.src}-${index}`}
-              className="flex min-w-0 justify-center overflow-hidden"
+              className="
+                flex
+                min-w-0
+                justify-center
+                overflow-hidden
+              "
               style={{
                 paddingTop: `${block.marginTop ?? 36}px`,
               }}
@@ -386,7 +466,12 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
                 decoding={isFirstImageBlock ? "sync" : "async"}
                 fetchPriority={isFirstImageBlock ? "high" : "auto"}
                 draggable={false}
-                className={`block h-auto max-w-full ${imageWidth}`}
+                className={`
+                  block
+                  h-auto
+                  max-w-full
+                  ${imageWidth}
+                `}
               />
             </div>
           );
@@ -394,7 +479,6 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
 
         /* ----------------------------------------
            SECTION TEXT
-           기존 그대로
         ---------------------------------------- */
 
         if (block.type === "sectionText") {
@@ -448,7 +532,6 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
 
         /* ----------------------------------------
            VIDEO
-           기존 그대로
         ---------------------------------------- */
 
         if (block.type === "video") {
@@ -466,11 +549,19 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
 
       {/* ----------------------------------------
           CREDIT
-          기존 그대로
       ---------------------------------------- */}
 
       {work.credit && (
-        <div className="mx-auto mt-20 w-full max-w-[636px] px-4 pb-16">
+        <div
+          className="
+            mx-auto
+            mt-20
+            w-full
+            max-w-[636px]
+            px-4
+            pb-16
+          "
+        >
           <p
             className="
               whitespace-pre-line
