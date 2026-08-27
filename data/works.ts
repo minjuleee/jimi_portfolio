@@ -159,12 +159,12 @@ export const works: Work[] = [
 
     category: {
       ko: "북 일러스트레이션 & 편집 디자인",
-      en: "Book Illustration & Editorial Design",
+      en: "Illustration & Editiorial Design",
     },
 
     description: {
       ko: "『나도, 날개옷!』은 날다람쥐와 청설모가 서로의 신체적 특징을 활용해 도움을 주고받으며 서로를 이해해 가는 이야기입니다. 멸종위기 동물에 대한 관심과 서로를 배려하고 사랑하는 마음을 전하고자 제작한 동화책입니다. 우수 프로젝트로 선정되어 언론에 소개되었습니다.",
-      en: "I Want Wing Clothes! is a picture book about a flying squirrel and a red squirrel who learn to understand and help each other by using their unique physical strengths. The story explores empathy, care, and awareness of endangered animals. The project was selected as an excellent work and featured in the news.",
+      en: '"I want wing clothes!" is about a flying squirrel and an envious Cheongseolmo meet and help each other by using their physical strengths to understand each other. This book is a fairy tale that raises awareness of caring and loving someone and the protection of endangered animals. This work was selected as an excellent project and was featured in the news.',
     },
 
     date: "Aug 2024",
@@ -183,7 +183,13 @@ export const works: Work[] = [
       },
       {
         type: "video",
-        src: "/images/i-want-wing-clothes/book.mov",
+        src: "/images/i-want-wing-clothes/korea.mov",
+        width: "full",
+        autoPlay: false,
+      },
+      {
+        type: "video",
+        src: "/images/i-want-wing-clothes/eng.mov",
         width: "full",
         autoPlay: false,
       },
@@ -345,7 +351,7 @@ export const works: Work[] = [
 
     description: {
       ko: "Soulmate Tennis Club의 크루 멤버 Jako, Radu, Soul이 함께 따뜻한 크리스마스를 보내는 모습을 담은 크리스마스 카드를 제작했습니다.",
-      en: "Created a Christmas card featuring Soulmate Tennis Club crew members Jako, Radu, and Soul enjoying a warm holiday season together.",
+      en: "Created a Christmas card featuring Soulmate Tennis Club crew members Joko, Radu, and Soul enjoying a warm holiday season together.",
     },
 
     date: "Nov 2024",
@@ -376,12 +382,13 @@ export const works: Work[] = [
 
     category: {
       ko: "캐릭터 디자인 & 일러스트레이션",
-      en: "Character Design & Illustration",
+      en: "Character Design",
     },
 
     description: {
       ko: "테니스를 사랑하는 다양한 캐릭터들의 이야기를 담은 SOULMATE TENNIS CLUB 프로젝트입니다. 캐릭터 디자인을 중심으로 일러스트레이션, 포스터, 신문, 굿즈 및 전시 디스플레이까지 다양한 매체로 확장하여 하나의 브랜드 세계관을 구축했습니다.",
-      en: "SOULMATE TENNIS CLUB is a character-driven project inspired by the stories of people who love tennis. The project expands its visual world through character design, illustration, posters, newspapers, merchandise, and exhibition displays.",
+
+      en: 'In the autumn of 2023, "SOULMATE TENNIS CLUB" was born—a tennis club founded by Soul, the main character of Hey JUD and president of the club, along with her four closest pup friends who are like her soulmates. We share the fun and playful episodes that unfold as Soul and her four dog friends play tennis together through various types of content.',
     },
 
     date: "Mar 2023",
@@ -514,7 +521,7 @@ export const works: Work[] = [
 
     description: {
       ko: "Soulmate Tennis Club의 캐릭터를 활용해 세계 4대 테니스 대회를 각각의 특징과 유머러스한 장면으로 표현한 일러스트레이션 시리즈입니다. Wimbledon 편에서는 Joko의 강력하고 빠른 서브를 역동적인 장면으로 표현했습니다.",
-      en: "Joko’s sppedy shots are so hard to return in Wimbledon.",
+      en: "Joko’s speedy shots are so hard to return in Wimbledon.",
     },
 
     date: "Mar 2023",
@@ -658,7 +665,7 @@ export const works: Work[] = [
 
     description: {
       ko: "『우당탕탕 헬스장』은 헬스장에 모인 다양한 사람들과 직원들의 모습을 유쾌하게 담아낸 일러스트레이션 프로젝트입니다.",
-      en: "Bustling Gym is an illustration project featuring a lively cast of people and staff gathered at a gym. From those who came to exercise to characters with unexpected reasons for being there, the series playfully captures the diverse personalities and amusing situations found in a bustling gym?",
+      en: "‘Bustling Gym’ is an illustration of the 37 different members and staff that have gathered at the gym. There are many people who came to the gym for unexpected purposes, including those who came to exercise, sell nutritional supplements, talk to them, and win love. Should we go observe the fun people at the gym?",
     },
 
     date: "Apr 2024",
@@ -731,7 +738,7 @@ export const works: Work[] = [
 
     category: {
       ko: "문구 & 제품 디자인",
-      en: "Stationery & Product Design",
+      en: "Stationery Design",
     },
 
     description: {
@@ -836,7 +843,7 @@ export const works: Work[] = [
 
     category: {
       ko: "캠페인 포스터",
-      en: "Campaign Poster",
+      en: "Illustration",
     },
 
     description: {
@@ -876,7 +883,7 @@ export const works: Work[] = [
 
     description: {
       ko: "어린아이가 직접 만든 듯한 클레이 오브제를 활용해 다채로운 스토리를 담은 문구 브랜드를 제작했습니다.",
-      en: "I created clay-like story figures inspired by a child's handmade creations and developed them into a colorful stationery brand.",
+      en: "I created stickers using figures handcrafted by young child, and launched it through my independent stationery brand.",
     },
 
     thumbnail: "/images/lets-clay-sticker/illustration.webp",

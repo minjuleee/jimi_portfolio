@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaEnvelope, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 
@@ -43,6 +44,11 @@ const SOCIAL_LINKS = [
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const pathname = usePathname();
+
+  // 작품 상세페이지인지 확인
+  const isWorkDetail = pathname.startsWith("/works/");
+
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
 
@@ -54,17 +60,33 @@ export default function Header() {
   return (
     <>
       <header className="w-full">
-        <div className="flex items-center justify-between px-5 py-6 sm:px-8 lg:px-12">
+        {/* 
+          MOBILE HEADER HEIGHT
+
+          홈:
+          h-[66px]
+
+          작품 상세페이지:
+          h-[150px]
+        */}
+        <div
+          className={`flex items-start justify-between md:h-auto ${
+            isWorkDetail ? "h-[150px]" : "h-[66px]"
+          }`}
+        >
           {/* LOGO */}
-          <Link
-            href="/"
-            className="text-[22px] font-medium leading-none tracking-[-0.03em]"
-          >
-            JIMI LEE
-          </Link>
+          <div className="ml-4 mt-4 md:ml-0 md:mt-0">
+            <Link href="/" className="inline-flex items-center">
+              <img
+                src="/images/logo.svg"
+                alt="JIMI LEE"
+                className="h-[110px] w-auto md:h-[180px]"
+              />
+            </Link>
+          </div>
 
           {/* DESKTOP NAV */}
-          <nav className="hidden items-center gap-7 text-[20px] font-extrabold leading-none text-black md:flex">
+          <nav className="mr-12 mt-6 hidden items-center gap-7 text-[20px] font-extrabold leading-none text-black md:flex">
             {NAV_LINKS.map((item) => (
               <Link
                 key={item.href}
@@ -101,11 +123,11 @@ export default function Header() {
             type="button"
             aria-label="Open menu"
             onClick={() => setMenuOpen(true)}
-            className="flex h-8 w-9 flex-col items-center justify-center gap-[6px] md:hidden"
+            className="mr-10 mt-10 flex h-8 w-9 flex-col items-center justify-center gap-[6px] md:hidden"
           >
-            <span className="block h-[2px] w-8 rounded-full bg-black" />
-            <span className="block h-[2px] w-8 rounded-full bg-black" />
-            <span className="block h-[2px] w-8 rounded-full bg-black" />
+            <span className="block h-[2px] w-8 rounded-full bg-green-600" />
+            <span className="block h-[2px] w-8 rounded-full bg-green-600" />
+            <span className="block h-[2px] w-8 rounded-full bg-green-600" />
           </button>
         </div>
       </header>
@@ -123,10 +145,10 @@ export default function Header() {
           type="button"
           aria-label="Close menu"
           onClick={() => setMenuOpen(false)}
-          className="absolute right-5 top-6 flex h-9 w-9 items-center justify-center"
+          className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center"
         >
-          <span className="absolute h-[2px] w-9 rotate-45 bg-black" />
-          <span className="absolute h-[2px] w-9 -rotate-45 bg-black" />
+          <span className="absolute h-[2px] w-9 rotate-45 bg-green-600" />
+          <span className="absolute h-[2px] w-9 -rotate-45 bg-green-600" />
         </button>
 
         <div className="flex h-full flex-col">
