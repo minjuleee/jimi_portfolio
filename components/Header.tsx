@@ -71,11 +71,11 @@ export default function Header() {
         */}
         <div
           className={`flex items-start justify-between md:h-auto ${
-            isWorkDetail ? "h-[150px]" : "h-[66px]"
+            isWorkDetail ? "h-[115px]" : "h-[60px]"
           }`}
         >
           {/* LOGO */}
-          <div className="ml-4 mt-4 md:ml-0 md:mt-0">
+          <div className="ml-2 mt-4 md:ml-0 md:mt-0">
             <Link href="/" className="inline-flex items-center">
               <img
                 src="/images/logo.svg"
@@ -123,7 +123,7 @@ export default function Header() {
             type="button"
             aria-label="Open menu"
             onClick={() => setMenuOpen(true)}
-            className="mr-10 mt-10 flex h-8 w-9 flex-col items-center justify-center gap-[6px] md:hidden"
+            className="mr-5 mt-10 flex h-8 w-9 flex-col items-center justify-center gap-[6px] md:hidden"
           >
             <span className="block h-[2px] w-8 rounded-full bg-green-600" />
             <span className="block h-[2px] w-8 rounded-full bg-green-600" />
