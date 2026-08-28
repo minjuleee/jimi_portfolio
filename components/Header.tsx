@@ -75,7 +75,7 @@ export default function Header() {
           }`}
         >
           {/* LOGO */}
-          <div className="ml-2 mt-2 md:ml-0 md:mt-0">
+          <div className="ml-2 mt-2 md:ml-0 md:mt-6">
             <Link href="/" className="inline-flex items-center">
               <img
                 src="/images/logo.svg"
@@ -86,7 +86,7 @@ export default function Header() {
           </div>
 
           {/* DESKTOP NAV */}
-          <nav className="mr-12 mt-6 hidden items-center gap-7 text-[20px] font-extrabold leading-none text-black md:flex">
+          <nav className="mr-12 mt-10 hidden items-center gap-7 text-[20px] font-extrabold leading-none text-green-700 md:flex">
             {NAV_LINKS.map((item) => (
               <Link
                 key={item.href}
@@ -125,16 +125,16 @@ export default function Header() {
             onClick={() => setMenuOpen(true)}
             className="mr-5 mt-10 flex h-8 w-9 flex-col items-center justify-center gap-[6px] md:hidden"
           >
-            <span className="block h-[2px] w-8 rounded-full bg-green-600" />
-            <span className="block h-[2px] w-8 rounded-full bg-green-600" />
-            <span className="block h-[2px] w-8 rounded-full bg-green-600" />
+            <span className="block h-[2px] w-8 rounded-full bg-green-700" />
+            <span className="block h-[2px] w-8 rounded-full bg-green-700" />
+            <span className="block h-[2px] w-8 rounded-full bg-green-700" />
           </button>
         </div>
       </header>
 
       {/* MOBILE FULL-SCREEN MENU */}
       <div
-        className={`fixed inset-0 z-[100] bg-white transition-all duration-300 md:hidden ${
+        className={`fixed inset-0 z-[100] bg-white text-green-700 transition-all duration-300 md:hidden ${
           menuOpen
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
@@ -147,8 +147,8 @@ export default function Header() {
           onClick={() => setMenuOpen(false)}
           className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center"
         >
-          <span className="absolute h-[2px] w-9 rotate-45 bg-green-600" />
-          <span className="absolute h-[2px] w-9 -rotate-45 bg-green-600" />
+          <span className="absolute h-[2px] w-9 rotate-45 bg-green-700" />
+          <span className="absolute h-[2px] w-9 -rotate-45 bg-green-700" />
         </button>
 
         <div className="flex h-full flex-col">
