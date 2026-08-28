@@ -768,10 +768,6 @@ export const works: Work[] = [
       },
       {
         type: "full",
-        src: "/images/dustins-awesome-pack/dustins_open.png",
-      },
-      {
-        type: "full",
         src: "/images/dustins-awesome-pack/awesome-pack.webp",
       },
       {

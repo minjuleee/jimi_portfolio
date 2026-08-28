@@ -23,9 +23,23 @@ type MediaVideoProps = {
 ---------------------------------------- */
 
 function MediaVideo({ block, index }: MediaVideoProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const [isReady, setIsReady] = useState(false);
+  /*
+   * poster가 있다면 처음부터 보여줘도 되므로 true.
+   * poster가 없으면 영상 데이터가 실제로 준비된 뒤 표시.
+   */
+  const [isReady, setIsReady] = useState(Boolean(block.poster));
+
+  /*
+   * 영상이 화면 근처에 오기 전에는
+   * src 자체를 넣지 않음.
+   *
+   * => 상세페이지 진입 시 아래쪽 MP4 다운로드 방지
+   */
+  const [shouldLoad, setShouldLoad] = useState(false);
+
   const [hasError, setHasError] = useState(false);
 
   // autoPlay이 false가 아니면 GIF처럼 반복 재생
@@ -42,7 +56,51 @@ function MediaVideo({ block, index }: MediaVideoProps) {
             ? "w-full"
             : "w-[74%]";
 
+  /* ----------------------------------------
+     LAZY LOAD VIDEO
+
+     실제 화면보다 약 700px 전에 영상 로딩 시작.
+     처음 상세페이지 들어왔을 때
+     아래쪽 영상을 전부 다운로드하지 않음.
+  ---------------------------------------- */
+
   useEffect(() => {
+    const container = containerRef.current;
+
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+
+        setShouldLoad(true);
+
+        // 한 번 로딩하기 시작했으면 다시 해제할 필요 없음
+        observer.disconnect();
+      },
+      {
+        rootMargin: "700px 0px",
+        threshold: 0,
+      },
+    );
+
+    observer.observe(container);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  /* ----------------------------------------
+     AUTO PLAY / PAUSE
+
+     GIF형 영상만 화면에 보일 때 재생.
+     화면 밖으로 나가면 pause.
+  ---------------------------------------- */
+
+  useEffect(() => {
+    if (!shouldLoad) return;
+
     const video = videoRef.current;
 
     if (!video || !isGifStyle || hasError) return;
@@ -54,8 +112,10 @@ function MediaVideo({ block, index }: MediaVideoProps) {
       if (!video.paused) return;
 
       video.play().catch(() => {
-        // iPhone Safari 저전력 모드 등에서
-        // 자동재생이 막혀도 그냥 무시
+        /*
+         * iPhone Safari 저전력 모드 등에서
+         * 자동재생이 막히는 경우는 무시
+         */
       });
     };
 
@@ -68,7 +128,11 @@ function MediaVideo({ block, index }: MediaVideoProps) {
         }
       },
       {
-        rootMargin: "300px 0px",
+        /*
+         * 재생 자체는 실제 viewport 부근에서만.
+         * 로딩 observer보다 범위를 작게 둠.
+         */
+        rootMargin: "150px 0px",
         threshold: 0.01,
       },
     );
@@ -83,7 +147,8 @@ function MediaVideo({ block, index }: MediaVideoProps) {
 
       const rect = video.getBoundingClientRect();
 
-      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+      const isVisible =
+        rect.top < window.innerHeight + 150 && rect.bottom > -150;
 
       if (isVisible) {
         tryPlay();
@@ -93,7 +158,8 @@ function MediaVideo({ block, index }: MediaVideoProps) {
     const handlePageShow = () => {
       const rect = video.getBoundingClientRect();
 
-      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+      const isVisible =
+        rect.top < window.innerHeight + 150 && rect.bottom > -150;
 
       if (isVisible) {
         tryPlay();
@@ -113,18 +179,21 @@ function MediaVideo({ block, index }: MediaVideoProps) {
 
       video.pause();
     };
-  }, [isGifStyle, hasError]);
+  }, [shouldLoad, isGifStyle, hasError]);
 
-  /*
-   * 일반 영상(autoPlay: false)의 경우
-   * poster가 없으면 첫 프레임을 보여주기 위해
-   * 아주 살짝 앞으로 이동
-   */
+  /* ----------------------------------------
+     VIDEO METADATA
+  ---------------------------------------- */
+
   const handleLoadedMetadata = () => {
     const video = videoRef.current;
 
     if (!video) return;
 
+    /*
+     * 일반 영상(autoPlay: false)이고 poster가 없다면
+     * 검은 화면 대신 첫 프레임을 보여줌.
+     */
     if (!isGifStyle && !block.poster) {
       try {
         video.currentTime = 0.01;
@@ -134,13 +203,10 @@ function MediaVideo({ block, index }: MediaVideoProps) {
     }
   };
 
-  /*
-   * 실제 영상 데이터가 준비되었을 때만
-   * opacity를 1로 변경
-   *
-   * => Safari에서 로딩 중 깨진 영상 / 물음표
-   * 표시가 노출되는 것 방지
-   */
+  /* ----------------------------------------
+     VIDEO READY
+  ---------------------------------------- */
+
   const handleLoadedData = () => {
     setIsReady(true);
     setHasError(false);
@@ -148,13 +214,27 @@ function MediaVideo({ block, index }: MediaVideoProps) {
 
   const handleCanPlay = () => {
     setIsReady(true);
+
+    const video = videoRef.current;
+
+    if (!video || !isGifStyle) return;
+
+    const rect = video.getBoundingClientRect();
+
+    const isVisible = rect.top < window.innerHeight + 150 && rect.bottom > -150;
+
+    if (isVisible) {
+      video.play().catch(() => {});
+    }
   };
 
-  /*
-   * iPhone Safari가 MP4를 읽지 못하거나
-   * 파일 경로가 잘못된 경우
-   * 깨진 미디어 아이콘 대신 아예 숨김
-   */
+  /* ----------------------------------------
+     VIDEO ERROR
+
+     Safari에서 깨진 미디어 아이콘 /
+     물음표 아이콘이 나타나는 것 방지
+  ---------------------------------------- */
+
   const handleError = () => {
     setHasError(true);
     setIsReady(false);
@@ -166,6 +246,7 @@ function MediaVideo({ block, index }: MediaVideoProps) {
 
   return (
     <div
+      ref={containerRef}
       key={`${block.src}-${index}`}
       className="
         flex
@@ -177,14 +258,22 @@ function MediaVideo({ block, index }: MediaVideoProps) {
     >
       <video
         ref={videoRef}
-        src={block.src}
+        /*
+         * 핵심:
+         * 화면 근처에 오기 전까지 src 자체가 없음.
+         */
+        src={shouldLoad ? block.src : undefined}
         poster={block.poster}
         autoPlay={false}
         muted={isGifStyle}
         loop={isGifStyle}
         controls={!isGifStyle}
         playsInline
-        preload={isGifStyle ? "auto" : "metadata"}
+        /*
+         * src가 생긴 뒤에도 전체 영상을 미리 받지 않고
+         * 필요한 데이터부터 가져옴.
+         */
+        preload={shouldLoad ? "metadata" : "none"}
         onLoadedMetadata={handleLoadedMetadata}
         onLoadedData={handleLoadedData}
         onCanPlay={handleCanPlay}
@@ -275,8 +364,16 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
               <img
                 src={block.src}
                 alt={block.alt?.[lang] ?? ""}
+                /*
+                 * 첫 이미지만 바로 로딩.
+                 * 나머지는 브라우저 native lazy loading.
+                 */
                 loading={isFirstImageBlock ? "eager" : "lazy"}
-                decoding={isFirstImageBlock ? "sync" : "async"}
+                /*
+                 * sync decoding은 초기 렌더링을 막을 수 있어서
+                 * 첫 이미지도 async로 변경.
+                 */
+                decoding="async"
                 fetchPriority={isFirstImageBlock ? "high" : "auto"}
                 draggable={false}
                 className="
@@ -316,26 +413,26 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
                   <div
                     key={`${item.src}-${itemIndex}`}
                     className="
-                        min-w-0
-                        overflow-hidden
-                      "
+                      min-w-0
+                      overflow-hidden
+                    "
                   >
                     <img
                       src={item.src}
                       alt={item.alt?.[lang] ?? ""}
                       loading={isFirstSplitImage ? "eager" : "lazy"}
-                      decoding={isFirstSplitImage ? "sync" : "async"}
+                      decoding="async"
                       fetchPriority={isFirstSplitImage ? "high" : "auto"}
                       draggable={false}
                       className="
-                          block
-                          h-auto
-                          w-full
-                          max-w-none
-                          sm:h-full
-                          sm:object-cover
-                          lg:max-w-full
-                        "
+                        block
+                        h-auto
+                        w-full
+                        max-w-none
+                        sm:h-full
+                        sm:object-cover
+                        lg:max-w-full
+                      "
                     />
                   </div>
                 );
@@ -374,7 +471,7 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
                   src={block.left.src}
                   alt={block.left.alt?.[lang] ?? ""}
                   loading={isFirstImageBlock ? "eager" : "lazy"}
-                  decoding={isFirstImageBlock ? "sync" : "async"}
+                  decoding="async"
                   fetchPriority={isFirstImageBlock ? "high" : "auto"}
                   draggable={false}
                   className="
@@ -402,9 +499,9 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
                   <div
                     key={`${item.src}-${itemIndex}`}
                     className="
-                        min-w-0
-                        overflow-hidden
-                      "
+                      min-w-0
+                      overflow-hidden
+                    "
                   >
                     <img
                       src={item.src}
@@ -414,14 +511,14 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
                       fetchPriority="auto"
                       draggable={false}
                       className="
-                          block
-                          h-auto
-                          w-full
-                          max-w-none
-                          sm:h-full
-                          sm:object-cover
-                          lg:max-w-full
-                        "
+                        block
+                        h-auto
+                        w-full
+                        max-w-none
+                        sm:h-full
+                        sm:object-cover
+                        lg:max-w-full
+                      "
                     />
                   </div>
                 ))}
@@ -463,7 +560,7 @@ export default function WorkDetailMedia({ work }: WorkDetailMediaProps) {
                 src={block.src}
                 alt={block.alt?.[lang] ?? ""}
                 loading={isFirstImageBlock ? "eager" : "lazy"}
-                decoding={isFirstImageBlock ? "sync" : "async"}
+                decoding="async"
                 fetchPriority={isFirstImageBlock ? "high" : "auto"}
                 draggable={false}
                 className={`
