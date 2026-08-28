@@ -4,7 +4,9 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import type { Work } from "@/data/works";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+
+const VISIBLE_WORKS_KEY = "work-list-visible-slugs";
 
 /* ========================================
    VIDEO THUMBNAIL
@@ -26,7 +28,10 @@ function VideoThumbnail({
   const [shouldLoad, setShouldLoad] = useState(priority);
 
   useEffect(() => {
-    if (priority) return;
+    if (priority) {
+      setShouldLoad(true);
+      return;
+    }
 
     const element = containerRef.current;
 
@@ -117,11 +122,49 @@ export default function WorkCard({
   priority?: boolean;
 }) {
   const { lang } = useLanguage();
+  const [restorePriority, setRestorePriority] = useState(false);
+
+  useLayoutEffect(() => {
+    try {
+      const visibleSlugs = JSON.parse(
+        sessionStorage.getItem(VISIBLE_WORKS_KEY) ?? "[]",
+      );
+
+      if (Array.isArray(visibleSlugs) && visibleSlugs.includes(work.slug)) {
+        setRestorePriority(true);
+      }
+    } catch {
+      sessionStorage.removeItem(VISIBLE_WORKS_KEY);
+    }
+  }, [work.slug]);
+
+  const rememberVisibleWorks = () => {
+    const visibleSlugs = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-work-slug]"),
+    )
+      .filter((card) => {
+        // 모바일/태블릿/데스크톱용으로 중복 렌더된 숨김 카드는 제외한다.
+        if (card.getClientRects().length === 0) return false;
+
+        const rect = card.getBoundingClientRect();
+
+        // 화면 바로 위아래의 카드도 함께 준비해 복귀 직후 빈 영역을 줄인다.
+        return rect.bottom >= -window.innerHeight && rect.top <= window.innerHeight * 2;
+      })
+      .map((card) => card.dataset.workSlug)
+      .filter((slug): slug is string => Boolean(slug));
+
+    sessionStorage.setItem(VISIBLE_WORKS_KEY, JSON.stringify(visibleSlugs));
+  };
+
+  const shouldLoadImmediately = priority || restorePriority;
 
   return (
     <Link
       href={`/works/${work.slug}`}
       scroll
+      data-work-slug={work.slug}
+      onClick={rememberVisibleWorks}
       className="group relative mb-1 block w-full break-inside-avoid overflow-hidden bg-[#f5f5f5]"
     >
       <div className="relative w-full overflow-hidden">
@@ -129,7 +172,7 @@ export default function WorkCard({
           <VideoThumbnail
             src={work.thumbnail}
             label={work.title[lang]}
-            priority={priority}
+            priority={shouldLoadImmediately}
           />
         ) : (
           <Image
@@ -137,7 +180,7 @@ export default function WorkCard({
             alt={work.title[lang]}
             width={1200}
             height={1600}
-            priority={priority}
+            priority={shouldLoadImmediately}
             quality={75}
             sizes="
               (max-width: 767px) 100vw,

@@ -71,16 +71,16 @@ export default function Header() {
         */}
         <div
           className={`flex items-start justify-between md:h-auto ${
-            isWorkDetail ? "h-[115px]" : "h-[60px]"
+            isWorkDetail ? "h-[150px]" : "h-[50px]"
           }`}
         >
           {/* LOGO */}
-          <div className="ml-2 mt-4 md:ml-0 md:mt-0">
+          <div className="ml-2 mt-2 md:ml-0 md:mt-0">
             <Link href="/" className="inline-flex items-center">
               <img
                 src="/images/logo.svg"
                 alt="JIMI LEE"
-                className="h-[110px] w-auto md:h-[180px]"
+                className="h-[100px] w-auto md:h-[180px]"
               />
             </Link>
           </div>

@@ -80,7 +80,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="pt-[90px]">
+    <main className="pt-[70px] md:pt-[90px]">
       {/* 목록으로 돌아왔을 때 이전 스크롤 위치 복원 */}
       <ListScrollRestoration />
 
