@@ -192,7 +192,7 @@ export default function WorkCard({
         )}
 
         {/* HOVER OVERLAY */}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/45 opacity-0 transition-opacity duration-300 md:group-hover:opacity-100">
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/45 opacity-0 transition-opacity duration-150 group-active:opacity-100 md:duration-300 md:group-hover:opacity-100">
           <h2 className="whitespace-pre-line px-4 text-center text-[22px] font-medium tracking-[0.03em] text-white sm:text-2xl">
             {work.title[lang]}
           </h2>
